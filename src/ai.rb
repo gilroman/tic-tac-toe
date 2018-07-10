@@ -8,24 +8,6 @@ class AI
         @moves = {}
     end
 
-    def getLocationScore(board, location, player, computer)
-        #create a new mock board and make the internal board array equal to the one being passed in
-        newBoard = Board.new
-        newBoard.setBoard(board.getBoard)
-
-        #mock a computer play with the location being passed in, return 10 if the computer would win
-        newBoard.setPlay(location, computer)
-        return 10 if newBoard.isGameWon?(newBoard, computer)
-
-        #mock a player play with the location being passed in, return -10 if the player would win
-        newBoard.setBoard(board.getBoard)
-        newBoard.setPlay(location, player)
-        return -10 if newBoard.isGameWon?(newBoard, player)
-
-        #return 0 if it would be a tie
-        return 0 if board.isFull?
-    end
-
     def miniMax(board, activePlayer, depth=0)
         computer = Computer.new('O')
         player = Player.new('X')

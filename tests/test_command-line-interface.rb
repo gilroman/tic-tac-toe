@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../command-line-interface'
+require_relative '../src/command-line-interface'
 
 describe CommandLineInterface do
     it 'welcomes the player to the game' do

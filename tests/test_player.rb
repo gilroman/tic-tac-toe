@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../player'
+require_relative '../src/player'
 
 describe Player do
     it 'has a name' do

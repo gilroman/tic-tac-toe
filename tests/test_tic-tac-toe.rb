@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../tic-tac-toe'
+require_relative '../src/tic-tac-toe'
 
 describe TicTacToe do    
     it 'should have a human player' do

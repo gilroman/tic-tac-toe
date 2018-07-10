@@ -1,7 +1,7 @@
 require 'minitest/autorun'
-require_relative '../ai'
-require_relative '../board'
-require_relative '../computer'
+require_relative '../src/ai'
+require_relative '../src/board'
+require_relative '../src/computer'
 
 describe Computer do
     it 'has a name' do

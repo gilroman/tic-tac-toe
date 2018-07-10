@@ -1,6 +1,6 @@
 require 'minitest/autorun'
-require_relative '../board'
-require_relative '../player'
+require_relative '../src/board'
+require_relative '../src/player'
 
 describe Board do
     it 'should create a valid board' do

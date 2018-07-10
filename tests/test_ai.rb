@@ -1,8 +1,8 @@
 require 'minitest/autorun'
-require_relative '../ai'
-require_relative '../board'
-require_relative '../computer'
-require_relative '../player'
+require_relative '../src/ai'
+require_relative '../src/board'
+require_relative '../src/computer'
+require_relative '../src/player'
 
 describe AI do    
     it 'should have a minimax function' do
