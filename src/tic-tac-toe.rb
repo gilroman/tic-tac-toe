@@ -4,6 +4,8 @@ require_relative 'computer'
 require_relative 'player'
 
 class TicTacToe
+    attr_accessor :activePlayer
+    attr_reader :board, :cli, :player, :computer
     def initialize
         @board = Board.new
         @cli = CommandLineInterface.new
@@ -12,41 +14,17 @@ class TicTacToe
         @activePlayer = @player
     end
 
-    def getActivePlayer
-        @activePlayer
-    end
-
-    def getBoard
-        @board
-    end
-
-    def getPlayer
-        @player
-    end
-
-    def getCLI
-        @cli
-    end
-
-    def getComputer
-        @computer
-    end
-
     def isOver?
         @board.isFull? || @board.isGameWon?(@board, @player) ||  @board.isGameWon?(@board, @computer)
     end
 
-    def setActivePlayer(player)
-        @activePlayer = player
-    end
-
     def start
-        human = @player.getName
+        human = @player.name
         @cli.introMessage
         puts @board.getBoardAsString
 
         while !self.isOver? do
-            activePlayerName = @activePlayer.getName
+            activePlayerName = @activePlayer.name
             positionValid = false
 
             if activePlayerName == human
@@ -60,7 +38,7 @@ class TicTacToe
                         if @board.isGameWon?(@board, @player)
                             @cli.saysCongratulations
                         end
-                        self.setActivePlayer(@computer)
+                        self.activePlayer = @computer
                         positionValid = true
                     else
                         puts @cli.saysLocationTaken
@@ -75,7 +53,7 @@ class TicTacToe
                     if @board.isGameWon?(@board, @computer)
                         @cli.saysSorry
                     end
-                self.setActivePlayer(@player)
+                self.activePlayer = @player
             end    
         end
     end

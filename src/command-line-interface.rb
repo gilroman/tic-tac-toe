@@ -14,11 +14,11 @@ class CommandLineInterface
     end
 
     def introMessage
-        @output.puts "Welcome to Gil's TicTacToe Game!\n"
+        @output.puts "Welcome to Gil's Tic-Tac-Toe Game!\n"
     end
 
     def saysLocationTaken
-        @output.puts "That location is invalid pleace play another position.\n"
+        @output.puts "That location is invalid please play another position.\n"
     end
 
     def saysSorry

@@ -11,7 +11,7 @@ describe Board do
 
     it 'should provide access to the board' do
         board = Board.new
-        boardArray = board.getBoard
+        boardArray = board.board
         assert_equal (0..8).to_a, boardArray
     end
 
@@ -19,8 +19,8 @@ describe Board do
     it 'should allow for the board to be set to an array' do
        board = Board.new
        array = [0,1,2]
-       board.setBoard(array)
-       assert_equal array, board.getBoard 
+       board.board = array
+       assert_equal array, board.board
     end
 
     it 'should record a move on the board' do

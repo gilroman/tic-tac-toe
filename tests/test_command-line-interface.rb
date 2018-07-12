@@ -6,7 +6,7 @@ describe CommandLineInterface do
         output = StringIO.new
         cli = CommandLineInterface.new(nil, output)
         cli.introMessage
-        assert_equal "Welcome to Gil's TicTacToe Game!\n", output.string
+        assert_equal "Welcome to Gil's Tic-Tac-Toe Game!\n", output.string
     end
 
     it 'asks the player for a number from 1 to 9' do
@@ -23,7 +23,7 @@ describe CommandLineInterface do
         output = StringIO.new
         cli = CommandLineInterface.new(nil, output)
         cli.saysLocationTaken
-        assert_equal "That location is invalid pleace play another position.\n", output.string
+        assert_equal "That location is invalid please play another position.\n", output.string
     end
 
     it 'congratulates the player for winning the game' do

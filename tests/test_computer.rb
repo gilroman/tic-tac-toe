@@ -6,7 +6,7 @@ require_relative '../src/computer'
 describe Computer do
     it 'has a name' do
         computer = Computer.new('O')
-        name = computer.getName
+        name = computer.name
         assert_equal 'O', name
     end
 

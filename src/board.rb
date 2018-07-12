@@ -1,4 +1,5 @@
 class Board
+    attr_accessor :board
     def initialize(boardArray = (0..8).to_a)
         @board = boardArray
         @winningCombinations = [
@@ -11,10 +12,6 @@ class Board
             [0,4,8],
             [2,4,6]            
         ]
-     end
-    
-     def getBoard
-        @board
      end
 
      def getBoardAsString
@@ -47,8 +44,8 @@ class Board
     def getPlays(board, player)
         acc = []
 
-        board.getBoard.each_with_index do | value, index | 
-            if value == player.getName 
+        @board.each_with_index do | value, index | 
+            if value == player.name
                 acc << index 
             end 
         end
@@ -81,13 +78,9 @@ class Board
     def isMoveValid?(location)
         location.between?(0,8) && @board[location].is_a?(Numeric)
     end
-
-    def setBoard(array = (0..8).to_a)
-        @board = array
-    end
     
     def setPlay(location, player)
-        @board[location] = player.getName
+        @board[location] = player.name
         @board
     end
 end

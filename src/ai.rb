@@ -20,7 +20,7 @@ class AI
             @moves = {}
         end
 
-        if activePlayer.getName == computer.getName
+        if activePlayer.name == computer.name
             best = -100
         else 
             best = 100
@@ -29,11 +29,11 @@ class AI
         # loop through all the empty spots on the board  
         board.getEmptyLocations.map { | location |
             # set empty location on the board to the currentPlayer
-            newBoard = Board.new(Array.new(board.getBoard))
+            newBoard = Board.new(Array.new(board.board))
             newBoard.setPlay(location, activePlayer)
 
             # record a play with the opposite player
-            if (activePlayer.getName == computer.getName)     #maximizing
+            if (activePlayer.name == computer.name)     #maximizing
                 result = miniMax(newBoard, player, depth+1)
                 best = [best, result].max - depth
             else
