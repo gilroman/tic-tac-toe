@@ -1,6 +1,4 @@
 require_relative 'board'
-require_relative 'computer'
-require_relative 'player'
 
 class AI
     def initialize
@@ -8,36 +6,36 @@ class AI
         @moves = {}
     end
 
-    def miniMax(board, activePlayer, depth=0)
-        computer = Computer.new('O')
-        player = Player.new('X')
-        return 100 if board.isGameWon?(board, computer)
-        return -100 if board.isGameWon?(board, player)
-        return 0 if board.isFull?
+    def miniMax(game, boardArray, activePlayerName, depth=0)
+        computerName = "O"
+        playerName = "X"
+        return 100 if game.isGameWon?(boardArray, computerName)
+        return -100 if game.isGameWon?(boardArray, playerName)
+        return 0 if game.isBoardFull?(boardArray)
 
         # clear the moves hash if this is the first call to the function
         if depth == 0
             @moves = {}
         end
 
-        if activePlayer.name == computer.name
+        if activePlayerName == computerName
             best = -100
         else 
             best = 100
         end
 
         # loop through all the empty spots on the board  
-        board.getEmptyLocations.map { | location |
+        game.getEmptyBoardLocations(boardArray).map { | location |
             # set empty location on the board to the currentPlayer
-            newBoard = Board.new(Array.new(board.board))
-            newBoard.setPlay(location, activePlayer)
+            newBoard = Board.new(Array.new(boardArray))
+            newBoard.setPlay(location, activePlayerName)
 
             # record a play with the opposite player
-            if (activePlayer.name == computer.name)     #maximizing
-                result = miniMax(newBoard, player, depth+1)
+            if (activePlayerName == computerName)     #maximizing
+                result = miniMax(game, newBoard.board, playerName, depth+1)
                 best = [best, result].max - depth
             else
-                result = miniMax(newBoard, computer, depth+1) #minimizing
+                result = miniMax(game, newBoard.board, computerName, depth+1) #minimizing
                 best = [best, result].min + depth
             end
 

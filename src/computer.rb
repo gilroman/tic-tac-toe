@@ -7,8 +7,8 @@ class Computer < Player
         @ai = AI.new
     end
 
-    def move(board)
-        @ai.miniMax(board, self)
+    def move(game, board)
+        @ai.miniMax(game, board, self.name)
         @ai.getBestMove
     end
 end
