@@ -7,6 +7,16 @@ describe AI do
         assert AI.method_defined? :miniMax
     end
 
+    it 'getBestMove should return a value of type integer' do
+        ai = AI.new
+        game = TicTacToe.new
+        activePlayerName = 'O'
+        board = [0, 1, 'X', 'X', 'O', 5, 'O', 'O', 8]
+        ai.miniMax(game, board, activePlayerName)
+        move =  ai.getBestMove
+        assert_instance_of(Integer, move)
+    end
+
     it 'minimax should return 100 if the computer has won' do
         ai = AI.new
         game = TicTacToe.new
@@ -34,14 +44,13 @@ describe AI do
         assert_equal 0, score
     end
 
-    it 'minmax should return the best move, 6 if the computer is playing next' do
+    it 'minmax should have a hash key for a best move score of 99 if the next move is for the computer, \'O\'' do
         ai = AI.new
         game = TicTacToe.new
         activePlayerName = 'O'
         board = ['X', 'X', 'O', 'O', 'O', 'X', 6, 7, 'X']
         ai.miniMax(game, board, activePlayerName)
-        location = ai.getBestMove
-        assert_equal 6, location
+        bestScore = ai.getBestScore
+        assert_equal 99, bestScore
     end
-
 end

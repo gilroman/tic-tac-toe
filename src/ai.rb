@@ -1,6 +1,7 @@
 require_relative 'board'
 
 class AI
+    attr_accessor :moves
     def initialize
         # collect a score for a move on each empty location
         @moves = {}
@@ -9,8 +10,8 @@ class AI
     def miniMax(game, boardArray, activePlayerName, depth=0)
         computerName = "O"
         playerName = "X"
-        return 100 if game.isGameWon?(boardArray, computerName)
-        return -100 if game.isGameWon?(boardArray, playerName)
+        return 100 - depth if game.isGameWon?(boardArray, computerName)
+        return -100 + depth if game.isGameWon?(boardArray, playerName)
         return 0 if game.isBoardFull?(boardArray)
 
         # clear the moves hash if this is the first call to the function
@@ -57,13 +58,18 @@ class AI
 
     def getBestMove
         # if there are multiple locations for a score, split the string and return a random location
-        if @moves[@moves.keys.max].kind_of? String
-            array = @moves[@moves.keys.max].split(",")
+        if @moves[self.getBestScore].kind_of? String
+            array = @moves[self.getBestScore].split(",").map { | location | location.to_i }
             random = Random.new  
             randomIndex = (random.rand * array.length).floor
             array[randomIndex]         
         else
-            @moves[@moves.keys.max] 
-        end
+            @moves[self.getBestScore] 
+        end   
     end
+
+    def getBestScore
+        @moves.keys.max
+    end
+
 end
