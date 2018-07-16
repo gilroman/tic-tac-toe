@@ -19,11 +19,7 @@ class AI
             @moves = {}
         end
 
-        if activePlayerName == computerName
-            best = -100
-        else 
-            best = 100
-        end
+        bestScore = activePlayerName == computerName ? -100 : 100
 
         # loop through all the empty spots on the board  
         game.getEmptyBoardLocations(boardArray).map { | location |
@@ -34,10 +30,10 @@ class AI
             # record a play with the opposite player
             if (activePlayerName == computerName)     #maximizing
                 result = miniMax(game, newBoard.board, playerName, depth+1)
-                best = [best, result].max - depth
+                bestScore = [bestScore, result].max - depth
             else
                 result = miniMax(game, newBoard.board, computerName, depth+1) #minimizing
-                best = [best, result].min + depth
+                bestScore = [bestScore, result].min + depth
             end
 
             # if its the first call, place the move hash to the moves instance variable
@@ -50,9 +46,7 @@ class AI
 
         #If not main call (recursive) return the heuristic value for next calculation
             if depth != 0
-                return best
-            else
-                self.getBestMove
+                return bestScore
             end
     end
 

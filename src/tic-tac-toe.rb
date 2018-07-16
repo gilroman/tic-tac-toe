@@ -9,10 +9,11 @@ class TicTacToe
     attr_reader :player, :computer
     def initialize
         @board = Board.new([0, 1, 2, 3, 4, 5, 6, 7, 8])
+        @cli = CommandLineInterface.new
         @player = Player.new('X')
         @computer = Computer.new('O')
         @output = Output.new
-        @activePlayer = @player
+        @activePlayer = Player.new('X')
         @winningCombinations = [
             [0,1,2],
             [3,4,5],
@@ -23,6 +24,20 @@ class TicTacToe
             [0,4,8],
             [2,4,6]            
         ]
+    end
+
+    def computerMove
+        computerMove = @computer.move(self, @board.board)
+        @board.setPlay(computerMove, @computer.name)
+        @cli.printToScreen(@output.saysTheComputersMove)
+        @cli.printToScreen(@output.boardToString(@board.board))
+        @cli.printToScreen(@output.newLine)
+        if self.isGameWon?(@board.board, @computer.name)
+            @cli.printToScreen(@output.saysSorry)
+        elsif self.isGameTied?(@board.board)
+            @cli.printToScreen(@output.saysGameTied)
+        end
+        self.activePlayer = @player
     end
 
     def getEmptyBoardLocations(boardArray)
@@ -61,6 +76,10 @@ class TicTacToe
         self.isBoardFull?(boardArray) || self.isGameWon?(boardArray, @player.name) ||  self.isGameWon?(boardArray, @computer.name)
     end
 
+    def isGameTied?(boardArray)
+        self.isBoardFull?(boardArray) && !self.isGameWon?(boardArray, @player.name) && !self.isGameWon?(boardArray, @computer.name)
+    end
+
     def isGameWon?(boardArray, playerName)
         won = false
         plays = self.getPlays(boardArray, playerName)
@@ -79,47 +98,47 @@ class TicTacToe
         location.between?(0,8) && boardArray[location].is_a?(Numeric)
     end
 
+    def playerMove
+        positionValid = false
+        while !positionValid
+            @cli.printToScreen(@output.saysEnterMove)
+            position = @cli.getInput - 1
+            if  self.isMoveValid?(@board.board, position)   
+                @board.setPlay(position, @player.name)
+                @cli.printToScreen(@output.newLine)
+                @cli.printToScreen(@output.saysYourMove)
+                @cli.printToScreen(
+                    @output.boardToString(@board.board)
+                )
+                @cli.printToScreen(@output.newLine)
+                if self.isGameWon?(@board.board, @player.name)
+                    @cli.printToScreen(@output.saysCongratulations)
+                elsif self.isGameTied?(@board.board)
+                    @cli.printToScreen(@output.saysGameTied)
+                end
+                self.activePlayer = @computer
+                positionValid = true
+            else
+                @cli.printToScreen(@output.saysLocationTaken)
+            end
+        end
+    end
+
     def start
-        cli = CommandLineInterface.new
         human = @player.name
-        cli.printToScreen(@output.saysGameIntro)
-        cli.printToScreen(@output.boardToString([0, 1, 2, 3, 4, 5, 6, 7, 8]))
+        @cli.printToScreen(@output.saysGameIntro)
+        @cli.printToScreen(@output.boardToString([0, 1, 2, 3, 4, 5, 6, 7, 8]))
+        @cli.printToScreen(@output.newLine)
 
         while !self.isGameOver?(@board.board) do
             activePlayerName = @activePlayer.name
-            positionValid = false
-
             if activePlayerName == human
-                while !positionValid
-                    cli.printToScreen(@output.saysEnterMove)
-                    position = cli.getInput
-                    position -= 1
-                    if  self.isMoveValid?(@board.board, position)   
-                        @board.setPlay(position, @player.name)
-                        cli.printToScreen(@output.saysYourMove)
-                        cli.printToScreen(
-                            @output.boardToString(@board.board)
-                        )
-                        if self.isGameWon?(@board.board, @player.name)
-                            cli.printToScreen(@output.saysCongratulations)
-                        end
-                        self.activePlayer = @computer
-                        positionValid = true
-                    else
-                        cli.printToScreen(@output.saysLocationTaken)
-                    end
-                end
+                self.playerMove
             end 
             if !self.isGameOver?(@board.board) 
-                computerMove = @computer.move(self, @board.board)
-                @board.setPlay(computerMove, @computer.name)
-                cli.printToScreen(@output.saysTheComputersMove)
-                cli.printToScreen(@output.boardToString(@board.board))
-                    if self.isGameWon?(@board.board, @computer.name)
-                        cli.printToScreen(@output.saysSorry)
-                    end
-                self.activePlayer = @player
+                self.computerMove
             end    
         end
+        
     end
 end

@@ -78,10 +78,17 @@ describe TicTacToe do
 
     it 'should report if the game is over because there is a winning combination on the board' do
         game = TicTacToe.new
-        board = ['X', 'O', 'O', 'X', 'X', 'O', 'X']
+        board = ['X', 'O', 'O', 'X', 'X', 'O', 'X', 7, 8]
         over = game.isGameOver?(board)
         assert over
     end   
+
+    it 'should report if the game ended in a tie' do
+        game = TicTacToe.new
+        board = ['O', 'O', 'X', 'X', 'X', 'O', 'O', 'O', 'X']
+        tied = game.isGameTied?(board)
+        assert tied
+    end 
 
     it 'should return an array with the index number of all the positions the player' do
         game = TicTacToe.new
@@ -91,5 +98,4 @@ describe TicTacToe do
         expectedPositions = [0, 4, 8]
         assert_equal expectedPositions, positions
     end
-
 end

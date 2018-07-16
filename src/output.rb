@@ -14,6 +14,9 @@ class Output
             " #{newBoard[6]} | #{newBoard[7]} | #{newBoard[8]} \n"
     end
 
+    def newLine 
+        "\n"
+    end
     def saysCongratulations
         "Congratulations!!! You won the game.\n"
     end
@@ -24,6 +27,10 @@ class Output
 
     def saysGameIntro
         "Welcome to Gil's Tic-Tac-Toe Game!\n"
+    end
+
+    def saysGameTied
+        "Game ended in a Tie.\n"
     end
 
     def saysLocationTaken

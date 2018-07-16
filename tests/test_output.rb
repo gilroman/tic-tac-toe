@@ -44,4 +44,14 @@ describe Output do
         output = Output.new
         assert_equal "Your Move: \n", output.saysYourMove
     end
+
+    it 'says the game ended in a tie' do
+        output = Output.new
+        assert_equal "Game ended in a Tie.\n", output.saysGameTied
+    end
+
+    it 'prints a new line character' do
+        output = Output.new
+        assert_equal "\n", output.newLine
+    end
 end
