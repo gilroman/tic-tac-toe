@@ -9,7 +9,6 @@ describe Board do
         assert_equal (0..8).to_a, boardArray
     end
 
-
     it 'should allow for the board to be set to an array' do
        board = Board.new
        array = [0,1,2]
@@ -19,10 +18,16 @@ describe Board do
 
     it 'should record a move on the board' do
         board = Board.new
-        player = Player.new('X')
+        playerName = 'X'
         boardPosition = 2
         expectedBoardState = [0,1,'X',3,4,5,6,7,8]
-        boardState = board.setPlay(boardPosition , player.name)
+        boardState = board.setPlay(boardPosition , playerName)
         assert_equal expectedBoardState, boardState
+    end
+
+    it 'should provide an array of empty locations on the board' do
+        board = Board.new(['X', 1, 2, 3, 4, 'X', 6, 7, 8])
+        expectedArray = [1, 2, 3, 4, 6, 7, 8]
+        assert_equal expectedArray, board.getEmptyBoardLocations(board.board)
     end
 end

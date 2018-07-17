@@ -10,9 +10,9 @@ class AI
     def miniMax(game, boardArray, activePlayerName, depth=0)
         computerName = "O"
         playerName = "X"
-        return 100 - depth if game.isGameWon?(boardArray, computerName)
-        return -100 + depth if game.isGameWon?(boardArray, playerName)
-        return 0 if game.isBoardFull?(boardArray)
+        return 100 - depth if game.gameRules.isGameWon?(boardArray, computerName)
+        return -100 + depth if game.gameRules.isGameWon?(boardArray, playerName)
+        return 0 if game.gameRules.isBoardFull?(boardArray)
 
         # clear the moves hash if this is the first call to the function
         if depth == 0
@@ -22,7 +22,7 @@ class AI
         bestScore = activePlayerName == computerName ? -100 : 100
 
         # loop through all the empty spots on the board  
-        game.getEmptyBoardLocations(boardArray).map { | location |
+        game.board.getEmptyBoardLocations(boardArray).map { | location |
             # set empty location on the board to the currentPlayer
             newBoard = Board.new(Array.new(boardArray))
             newBoard.setPlay(location, activePlayerName)
