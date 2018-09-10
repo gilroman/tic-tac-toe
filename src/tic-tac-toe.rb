@@ -1,39 +1,22 @@
 require_relative 'board'
 require_relative 'command-line-interface'
 require_relative 'computer'
-require_relative 'human'
-require_relative 'player'
+require_relative 'game-rules'
+require_relative 'initializer'
 require_relative 'output'
 
 class TicTacToe
-    attr_accessor :activePlayer, :board
-    attr_reader :player1, :player2
-    def initialize
-        @board = Board.new([0, 1, 2, 3, 4, 5, 6, 7, 8])
+    attr_accessor :activePlayer, :board, :cli, :gameRules, :player1, :player2
+    attr_reader :gameOver, :winner
+    
+    def initialize(boardSize = 9)
+        zeroBasedIndexCompansation = -1
+        @board = Board.new((0..boardSize + zeroBasedIndexCompansation).to_a)
+        @gameRules = GameRules.new
+        @initializer = Initializer.new(self)
         @cli = CommandLineInterface.new
         @output = Output.new
         @gameOver = false
-    end
-
-    def isGameOver?
-        @board.isFull? || @board.isGameWon?(@player1.name) ||  @board.isGameWon?(@player2.name)
-    end
-
-    def isTied?
-        @board.isFull? && !@board.isGameWon?(@player1.name) && !@board.isGameWon?(@player2.name)
-    end
-
-    def getWinner
-        return @player1 if @board.isGameWon?(@player1.name)
-        return @player2 if @board.isGameWon?(@player2.name) 
-    end
-
-    def printEnding
-        self.isTied? ?
-            @output.saysGameTied :
-            self.getWinner.class.name == "Computer" ?
-                @output.saysSorry :
-                @output.saysCongratulations
     end
 
     def getGameOverPhrase(winner = "")
@@ -51,13 +34,13 @@ class TicTacToe
             string = ""
             case @activePlayer.class.name
             when "Computer"
-                string += @output.saysTheComputersMove
+                string += Output::SAYS_THE_COMPUTERS_MOVE
             when "Human"
-                string += @output.newLine
-                string += @output.saysYourMove
+                string += Output::NEW_LINE
+                string += Output::SAYS_YOUR_MOVE
             end
             string += @board.getStringRepresentation
-            string += @output.newLine
+            string += Output::NEW_LINE
             string
     end
 

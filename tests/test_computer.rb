@@ -10,23 +10,15 @@ describe Computer do
         assert_equal 'O', name
     end
 
-    it 'gets a position for the best move' do
-        game = TicTacToe.new
-        computer = Computer.new('O')
-        game.board.board = ['X', 'X', 'O', 'O', 'O', 'X', 6, 7, 'X']
-        
-        location = computer.getPosition(game.board)
-        
-        assert_equal 6, location
-    end
-
-    it 'has a move method that records a move in the right location on the board' do
-        game = TicTacToe.new
-        computer = Computer.new('O')
-        game.board.board = ['X', 'X', 'O', 'O', 'O', 'X', 6, 7, 'X']
-        
-        computer.move(game.board)
-
-        assert_equal 'O', game.board.getPlay(6)
+    describe 'move method' do
+        it 'has a move method that records a move in the right location on the board' do
+            game = TicTacToe.new
+            computer = Computer.new('O')
+            game.board.board = ['X', 'X', 'O', 'O', 'O', 'X', 6, 7, 'X']
+            
+            computer.move(game.gameRules, game.board)
+    
+            assert_equal 'O', game.board.getPiece(6)
+        end
     end
 end

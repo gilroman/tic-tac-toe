@@ -9,10 +9,14 @@ describe Player do
         
         assert_equal 'X', name
     end
-    it 'has a move method that raises an error if it\'s not implemented' do
-        player = Player.new('X')
-        assert_raises NotImplementedError do
-            player.move
+    
+    describe 'move method' do
+        it 'has a move method that raises an error if it\'s not implemented' do
+            player = Player.new('X')
+            game = TicTacToe.new
+            assert_raises NotImplementedError do
+                player.move(game.gameRules, game.board)
+            end
         end
     end
 end

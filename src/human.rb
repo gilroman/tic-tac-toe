@@ -4,25 +4,26 @@ require_relative 'output'
 
 class Human < Player
     attr_accessor :cli
+    
     def initialize(name)
         super(name)
         @cli = CommandLineInterface.new
-        @output = Output.new
     end
 
     def getPosition
-        @cli.printToScreen(@output.saysEnterMove)
+        @cli.printToScreen(Output::SAYS_ENTER_MOVE)
         position = @cli.getInput.to_i
         position
     end
 
-    def move(board)
-        position = self.getPosition
+    def move(gameRules, board)
+        zeroBasedIndexCompensation = -1
+        position = self.getPosition + zeroBasedIndexCompensation
         
-        while !board.isMoveValid?(position-1)
-            position = self.getPosition
+        while !board.isMoveValid?(position)
+            position = self.getPosition + zeroBasedIndexCompensation
         end
 
-        board.setPlay(position-1, @name)
+        board.setPlay(position, @name)
     end
 end

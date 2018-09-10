@@ -7,13 +7,9 @@ class Computer < Player
         @ai = AI.new
     end
 
-    def getPosition(board)
-        @ai.miniMax(board, self.name)
-        @ai.getBestMove
-    end
-
-    def move(board)
-        position = self.getPosition(board)
+    def move(gameRules, board)
+        @ai.miniMax(gameRules, board, self.name)
+        position = @ai.getBestMove
         board.setPlay(position, @name)
     end
 end

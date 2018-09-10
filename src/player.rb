@@ -4,7 +4,7 @@ class Player
         @name = name
     end
 
-    def move
+    def move(gameRules, board)
         raise NotImplementedError, 'You must implement the move method'
     end
 end

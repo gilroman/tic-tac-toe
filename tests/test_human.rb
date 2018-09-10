@@ -11,27 +11,32 @@ describe Human do
         assert_equal 'X', name
     end
 
-    it 'asks for the player for a move location and returns the location as an integer' do
-        human = Human.new('X')
-        input = StringIO.new(3.to_s)
-        output = StringIO.new
-        human.cli = CommandLineInterface.new(input, output)
-        
-        position = human.getPosition
-        
-        assert_equal 3, position
+    describe 'getPosition method' do
+        it 'asks for the player for a move location and returns the location as an integer' do
+            human = Human.new('X')
+            input = StringIO.new(3.to_s)
+            output = StringIO.new
+            human.cli = CommandLineInterface.new(input, output)
+            
+            position = human.getPosition
+            
+            assert_equal 3, position
+        end
     end
 
-    it 'has a move method that records a move in the right location on the board' do
-        game = TicTacToe.new
-        human = Human.new('X')
-        input = StringIO.new("3")
-        output = StringIO.new
-        position = input.string.to_i - 1
-        human.cli = CommandLineInterface.new(input, output)
-        
-        human.move(game.board)
-
-        assert_equal 'X', game.board.getPlay(position)
+    describe 'getPiece method' do
+        it 'has a move method that records a move in the right location on the board' do
+            game = TicTacToe.new
+            human = Human.new('X')
+            input = StringIO.new("3")
+            output = StringIO.new
+            zeroBasedIndexCompensation = -1
+            position = input.string.to_i + zeroBasedIndexCompensation
+            human.cli = CommandLineInterface.new(input, output)
+            
+            human.move(game.gameRules, game.board)
+    
+            assert_equal 'X', game.board.getPiece(position)
+        end
     end
 end

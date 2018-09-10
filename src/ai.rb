@@ -1,51 +1,45 @@
+require_relative 'board'
+
 class AI
     attr_accessor :moves
     def initialize
-        # collect a score for a move on each empty location
         @moves = {}
     end
 
-    def miniMax(board, activePlayerName, depth=0)
+    def miniMax(gameRules, board, activePlayerName, depth=0)
         computerName = "O"
         playerName = "X"
-        return 100 - depth if board.isGameWon?(computerName)
-        return -100 + depth if board.isGameWon?(playerName)
-        return 0 if board.isFull?
+        scoreForWinningGame = 100
+        scoreForLosingGame = -100
+        scoreForTiedGame = 0
+        
+        return scoreForWinningGame - depth if gameRules.isGameWon?(board, computerName)
+        return scoreForLosingGame + depth if gameRules.isGameWon?(board, playerName)
+        return scoreForTiedGame if board.isFull?
 
-        # clear the moves hash if this is the first call to the function
-        if depth == 0
-            @moves = {}
-        end
-
-        bestScore = activePlayerName == computerName ? -100 : 100
-
-        # loop through all the empty spots on the board  
-        board.getEmptyBoardLocations(board.board).map { | location |
-            # set empty location on the board to the currentPlayer
+        @moves = {} if depth == 0
+        
+        bestScore = activePlayerName == computerName ? scoreForLosingGame : scoreForWinningGame
+ 
+        board.getEmptyBoardLocations.map { | location |
             newBoard = Board.new(Array.new(board.board))
             newBoard.setPlay(location, activePlayerName)
 
-            # record a play with the opposite player
-            if (activePlayerName == computerName)     #maximizing
-                result = miniMax(newBoard, playerName, depth+1)
+            if (activePlayerName == computerName)
+                result = miniMax(gameRules, newBoard, playerName, depth+1)
                 bestScore = [bestScore, result].max - depth
             else
-                result = miniMax(newBoard, computerName, depth+1) #minimizing
+                result = miniMax(gameRules, newBoard, computerName, depth+1)
                 bestScore = [bestScore, result].min + depth
             end
 
-            # if its the first call, place the move hash to the moves instance variable
             if depth == 0
-         	    # create a comma separated list of moves if the locations have the same result
                 locations = @moves.key?(result) ? "#{@moves[result]},#{location}" : location
                 @moves[result] = locations
             end
         }
 
-        #If not main call (recursive) return the heuristic value for next calculation
-            if depth != 0
-                return bestScore
-            end
+            return bestScore if depth != 0
     end
 
     def getBestMove
