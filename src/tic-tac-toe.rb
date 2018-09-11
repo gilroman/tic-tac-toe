@@ -12,6 +12,7 @@ class TicTacToe
         @board = Board.new([0, 1, 2, 3, 4, 5, 6, 7, 8])
         @cli = CommandLineInterface.new
         @output = Output.new
+        @gameOver = false
     end
 
     def isGameOver?
@@ -35,6 +36,17 @@ class TicTacToe
                 @output.saysCongratulations
     end
 
+    def getGameOverPhrase(winner = "")
+        case winner
+        when "Human"
+            Output::SAYS_CONGRATULATIONS
+        when "Computer"
+            Output::SAYS_SORRY
+        else
+            Output::SAYS_GAME_TIED
+        end
+    end
+
     def playerMove
             string = ""
             case @activePlayer.class.name
@@ -49,45 +61,36 @@ class TicTacToe
             string
     end
 
+    def run
+        @activePlayer.move(gameRules, @board)
+        @cli.printToScreen(self.playerMove)
+        
+        if @gameRules.isGameTied?(@board, @player1, @player2)
+            @gameOver = true
+        elsif @gameRules.isGameWon?(@board, @activePlayer.name) 
+            @gameOver = true
+            @winner = @activePlayer.class.name
+        end
+
+        self.switchPlayers if !@gameOver
+    end
+
     def setActivePlayer(player)
         @activePlayer = player
     end
 
-    def setPlayers(option)
-        case option
-        when 1
-            @player1 = Human.new('X')
-            @player2 = Computer.new('O')
-            @activePlayer = @player1
-        when 2
-            @player1 = Computer.new('O')
-            @player2 = Human.new('X')
-            @activePlayer = @player1
-        end
-    end
-
     def start
-        @cli.printToScreen(@output.gameIntro(@board.getStringRepresentation))        
-        @cli.printToScreen(@output.asksPlayerTurn)
-        playerTurnChoice =  @cli.getInput
+        @cli.printToScreen(@output.gameIntro(@board.getStringRepresentation))
+        @initializer.setPlayers(@initializer.getPlayerTurn)
 
-        until playerTurnChoice == 'Y' || playerTurnChoice == 'n' do
-            @cli.printToScreen(@output.wrongLetterWarning)
-            playerTurnChoice =  @cli.getInput
-        end
-
-        playerTurnChoice == 'Y' ? self.setPlayers(1) : self.setPlayers(2)
-
-        while !self.isGameOver? do
-            @activePlayer.move(@board)
-            @cli.printToScreen(self.playerMove)
-            self.switchPlayers
+        while !@gameOver
+            self.run
         end
         
-        @cli.printToScreen(self.printEnding)
+        @cli.printToScreen(self.getGameOverPhrase(@winner))
     end
 
     def switchPlayers
-        @activePlayer == @player1 ? @activePlayer = @player2 : @activePlayer = @player1
+        @activePlayer = @activePlayer == @player1 ? @player2 : @player1
     end
 end
