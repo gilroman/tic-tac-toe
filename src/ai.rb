@@ -1,5 +1,3 @@
-require_relative 'board'
-
 class AI
     attr_accessor :moves
     def initialize
@@ -7,12 +5,12 @@ class AI
         @moves = {}
     end
 
-    def miniMax(game, boardArray, activePlayerName, depth=0)
+    def miniMax(board, activePlayerName, depth=0)
         computerName = "O"
         playerName = "X"
-        return 100 - depth if game.gameRules.isGameWon?(boardArray, computerName)
-        return -100 + depth if game.gameRules.isGameWon?(boardArray, playerName)
-        return 0 if game.gameRules.isBoardFull?(boardArray)
+        return 100 - depth if board.isGameWon?(computerName)
+        return -100 + depth if board.isGameWon?(playerName)
+        return 0 if board.isFull?
 
         # clear the moves hash if this is the first call to the function
         if depth == 0
@@ -22,17 +20,17 @@ class AI
         bestScore = activePlayerName == computerName ? -100 : 100
 
         # loop through all the empty spots on the board  
-        game.board.getEmptyBoardLocations(boardArray).map { | location |
+        board.getEmptyBoardLocations(board.board).map { | location |
             # set empty location on the board to the currentPlayer
-            newBoard = Board.new(Array.new(boardArray))
+            newBoard = Board.new(Array.new(board.board))
             newBoard.setPlay(location, activePlayerName)
 
             # record a play with the opposite player
             if (activePlayerName == computerName)     #maximizing
-                result = miniMax(game, newBoard.board, playerName, depth+1)
+                result = miniMax(newBoard, playerName, depth+1)
                 bestScore = [bestScore, result].max - depth
             else
-                result = miniMax(game, newBoard.board, computerName, depth+1) #minimizing
+                result = miniMax(newBoard, computerName, depth+1) #minimizing
                 bestScore = [bestScore, result].min + depth
             end
 
