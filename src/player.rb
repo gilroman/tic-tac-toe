@@ -3,4 +3,8 @@ class Player
     def initialize(name)
         @name = name
     end
+
+    def move
+        raise NotImplementedError, 'You must implement the move method'
+    end
 end

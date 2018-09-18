@@ -1,22 +1,21 @@
 class Output
-    def boardToString(board)
-        newBoard = board.map do | value |
-            if value.is_a?(Numeric)
-                " "
-            else
-                value
-            end
-        end
-        " #{newBoard[0]} | #{newBoard[1]} | #{newBoard[2]} \n" +
-            "------------\n" +
-            " #{newBoard[3]} | #{newBoard[4]} | #{newBoard[5]} \n" +
-            "------------\n" +
-            " #{newBoard[6]} | #{newBoard[7]} | #{newBoard[8]} \n"
-    end
-
     def newLine 
         "\n"
     end
+    
+    def asksPlayerTurn 
+        "Would you like to play first?. (Y/n): "
+    end
+
+    def gameIntro(boardAsString)
+        string = [self.saysWelcome, boardAsString, self.newLine].join
+        string
+    end
+
+    def wrongLetterWarning
+        "Please answer with the letters Y or n only!"
+    end
+
     def saysCongratulations
         "Congratulations!!! You won the game.\n"
     end
@@ -25,7 +24,7 @@ class Output
         "Please enter the number of the square you would like to play from 1 to 9:\n"
     end
 
-    def saysGameIntro
+    def saysWelcome
         "Welcome to Gil's Tic-Tac-Toe Game!\n"
     end
 
