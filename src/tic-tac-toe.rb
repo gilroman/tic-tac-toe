@@ -2,77 +2,78 @@ require_relative 'board'
 require_relative 'command-line-interface'
 require_relative 'computer'
 require_relative 'game-rules'
-require_relative 'player'
+require_relative 'initializer'
 require_relative 'output'
 
 class TicTacToe
-    attr_accessor :activePlayer, :board
-    attr_reader :player, :computer, :gameRules
-    def initialize
-        @board = Board.new([0, 1, 2, 3, 4, 5, 6, 7, 8])
-        @cli = CommandLineInterface.new
-        @player = Player.new('X')
-        @computer = Computer.new('O')
+    attr_accessor :activePlayer, :board, :cli, :gameRules, :player1, :player2
+    attr_reader :gameOver, :winner
+    
+    def initialize(boardSize = 9)
+        zeroBasedIndexCompansation = -1
+        @board = Board.new((0..boardSize + zeroBasedIndexCompansation).to_a)
         @gameRules = GameRules.new
+        @initializer = Initializer.new(self)
+        @cli = CommandLineInterface.new
         @output = Output.new
-        @activePlayer = Player.new('X')
+        @gameOver = false
     end
 
-    def computerMove
-        computerMove = @computer.move(self, @board.board)
-        @board.setPlay(computerMove, @computer.name)
-        @cli.printToScreen(@output.saysTheComputersMove)
-        @cli.printToScreen(@output.boardToString(@board.board))
-        @cli.printToScreen(@output.newLine)
-        if @gameRules.isGameWon?(@board.board, @computer.name)
-            @cli.printToScreen(@output.saysSorry)
-        elsif @gameRules.isGameTied?(@board.board)
-            @cli.printToScreen(@output.saysGameTied)
+    def getGameOverPhrase(winner = "")
+        case winner
+        when "Human"
+            Output::SAYS_CONGRATULATIONS
+        when "Computer"
+            Output::SAYS_SORRY
+        else
+            Output::SAYS_GAME_TIED
         end
-        self.activePlayer = @player
     end
 
     def playerMove
-        positionValid = false
-        while !positionValid
-            @cli.printToScreen(@output.saysEnterMove)
-            position = @cli.getInput - 1
-            if  @gameRules.isMoveValid?(@board.board, position)   
-                @board.setPlay(position, @player.name)
-                @cli.printToScreen(@output.newLine)
-                @cli.printToScreen(@output.saysYourMove)
-                @cli.printToScreen(
-                    @output.boardToString(@board.board)
-                )
-                @cli.printToScreen(@output.newLine)
-                if @gameRules.isGameWon?(@board.board, @player.name)
-                    @cli.printToScreen(@output.saysCongratulations)
-                elsif @gameRules.isGameTied?(@board.board)
-                    @cli.printToScreen(@output.saysGameTied)
-                end
-                self.activePlayer = @computer
-                positionValid = true
-            else
-                @cli.printToScreen(@output.saysLocationTaken)
+            string = ""
+            case @activePlayer.class.name
+            when "Computer"
+                string += Output::SAYS_THE_COMPUTERS_MOVE
+            when "Human"
+                string += Output::NEW_LINE
+                string += Output::SAYS_YOUR_MOVE
             end
+            string += @board.getStringRepresentation
+            string += Output::NEW_LINE
+            string
+    end
+
+    def run
+        @activePlayer.move(gameRules, @board)
+        @cli.printToScreen(self.playerMove)
+        
+        if @gameRules.isGameTied?(@board, @player1, @player2)
+            @gameOver = true
+        elsif @gameRules.isGameWon?(@board, @activePlayer.name) 
+            @gameOver = true
+            @winner = @activePlayer.class.name
         end
+
+        self.switchPlayers if !@gameOver
+    end
+
+    def setActivePlayer(player)
+        @activePlayer = player
     end
 
     def start
-        human = @player.name
-        @cli.printToScreen(@output.saysGameIntro)
-        @cli.printToScreen(@output.boardToString([0, 1, 2, 3, 4, 5, 6, 7, 8]))
-        @cli.printToScreen(@output.newLine)
+        @cli.printToScreen(@output.gameIntro(@board.getStringRepresentation))
+        @initializer.setPlayers(@initializer.getPlayerTurn)
 
-        while !@gameRules.isGameOver?(@board.board) do
-            activePlayerName = @activePlayer.name
-            if activePlayerName == human
-                self.playerMove
-            end 
-            if !@gameRules.isGameOver?(@board.board) 
-                self.computerMove
-            end    
+        while !@gameOver
+            self.run
         end
         
+        @cli.printToScreen(self.getGameOverPhrase(@winner))
+    end
+
+    def switchPlayers
+        @activePlayer = @activePlayer == @player1 ? @player2 : @player1
     end
 end

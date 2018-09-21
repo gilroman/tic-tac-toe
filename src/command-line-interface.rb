@@ -5,10 +5,10 @@ class CommandLineInterface
     end
 
     def getInput   
-        @input.gets.chomp.to_i
+        @input.gets.chomp
     end
 
     def printToScreen(string)
-        @output.puts string
+        @output.print(string)
     end
 end
